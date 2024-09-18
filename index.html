@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscador números faltantes</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, Helvetica, sans-serif;
+        gap: 10px;
+      }
+      header h2 {
+        text-align: center;
+      }
+      .custom-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      .custom-button:hover {
+        background-color: #0056b3;
+      }
+      .clasification {
+        width: 99%;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+
+      .clasification div {
+        border: 1px solid black;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .selection ul li {
+        text-align: center;
+        background-color: gray;
+        border-radius: 5px;
+        color: white;
+        font-size: 1rem;
+        width: 100px;
+        height: 1rem;
+        padding: 5px;
+      }
+
+      .missing ul li {
+        text-align: center;
+        background-color: rgb(247, 112, 112);
+        border-radius: 5px;
+        color: white;
+        font-size: 1rem;
+        width: 100px;
+        height: 1rem;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header id="header">
+      <h2 class="superior">Cámara Civil</h2>
+      <h2 class="inferior">Centro de Adjudicación y Sorteo de Causas</h2>
+    </header>
+
+    <label for="directoryPicker" id="customButton" class="custom-button"
+      >Seleccionar archivos</label
+    >
+    <input type="file" id="directoryPicker" multiple style="display: none" />
+    <section class="clasification">
+      <div class="selection">
+        <h4>NÚMEROS DE PLANILLAS SELECCIONADAS</h4>
+        <ul id="fileList"></ul>
+      </div>
+      <div class="missing">
+        <h4>NÚMERO DE PLANILLAS FALTANTES</h4>
+        <ul id="result"></ul>
+      </div>
+    </section>
+
+    <script>
+      const directoryPicker = document.getElementById("directoryPicker");
+      const fileList = document.getElementById("fileList");
+      const result = document.getElementById("result");
+
+      directoryPicker.addEventListener("change", (event) => {
+        const files = event.target.files;
+        const planillas = [];
+        fileList.innerHTML = ""; // Limpiar la lista
+
+        Array.from(files).forEach((file) => {
+          // Extraer el número del nombre del archivo
+          const fileName = file.name;
+          const numberOnly = fileName.replace(/[^\d-]/g, ""); // Eliminar todo excepto los dígitos
+
+          const listItem = document.createElement("li");
+
+          listItem.textContent = numberOnly; // Mostrar solo el número
+          planillas.push(parseInt(numberOnly, 10));
+          fileList.appendChild(listItem);
+        });
+        let ordened = planillas.sort((a, b) => a - b);
+        let missingNumbers = [];
+        for (let i = 0; i < ordened.length - 1; i++) {
+          let current = ordened[i];
+          let next = ordened[i + 1];
+
+          if (next - current > 1) {
+            for (let j = current + 1; j < next; j++) {
+              missingNumbers.push(j);
+            }
+          }
+        }
+        result.innerHTML = ""; // Limpiar la lista
+        Array.from(missingNumbers).forEach((file) => {
+          console.log(file);
+          const listItem = document.createElement("li");
+          listItem.textContent = file; // Mostrar solo el número
+
+          result.appendChild(listItem);
+        });
+      });
+    </script>
+  </body>
+</html>
