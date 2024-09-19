@@ -91,10 +91,12 @@
     <section class="clasification">
       <div class="selection">
         <h4>NÚMEROS DE PLANILLAS SELECCIONADAS</h4>
+        <p class="quantitySelect"></p>
         <ul id="fileList"></ul>
       </div>
       <div class="missing">
         <h4>NÚMEROS DE PLANILLAS FALTANTES</h4>
+        <p class="quantityMissing"></p>
         <ul id="result"></ul>
       </div>
     </section>
@@ -103,6 +105,8 @@
       const directoryPicker = document.getElementById("directoryPicker");
       const fileList = document.getElementById("fileList");
       const result = document.getElementById("result");
+      const quantitySelect = document.querySelector(".quantitySelect")
+      const quantityMissing = document.querySelector(".quantityMissing")
 
       directoryPicker.addEventListener("change", (event) => {
         const files = event.target.files;
@@ -120,6 +124,7 @@
           planillas.push(parseInt(numberOnly, 10));
           fileList.appendChild(listItem);
         });
+        quantitySelect.textContent = `Cantidad: ${files.length}`
         let ordened = planillas.sort((a, b) => a - b);
         let missingNumbers = [];
         for (let i = 0; i < ordened.length - 1; i++) {
@@ -140,6 +145,7 @@
 
           result.appendChild(listItem);
         });
+        quantityMissing.textContent = `Cantidad: ${missingNumbers.length}`
       });
     </script>
   </body>
