@@ -99,21 +99,32 @@
         <p class="quantityMissing"></p>
         <ul id="result"></ul>
       </div>
+      <div class="missing">
+        <h4>NÚMEROS DE PLANILLAS CON P MAYÚSCULA</h4>
+        <ul id="listP"></ul>
+      </div>
     </section>
 
     <script>
       const directoryPicker = document.getElementById("directoryPicker");
       const fileList = document.getElementById("fileList");
       const result = document.getElementById("result");
-      const quantitySelect = document.querySelector(".quantitySelect")
-      const quantityMissing = document.querySelector(".quantityMissing")
+      const quantitySelect = document.querySelector(".quantitySelect");
+      const quantityMissing = document.querySelector(".quantityMissing");
+      const listP = document.querySelector("#listP");
 
       directoryPicker.addEventListener("change", (event) => {
         const files = event.target.files;
         const planillas = [];
+        const planillasP = [];
         fileList.innerHTML = ""; // Limpiar la lista
 
         Array.from(files).forEach((file) => {
+          const p = file.name.split("")[0];
+
+          if (p === "P") {
+            planillasP.push(file.name);
+          }
           // Extraer el número del nombre del archivo
           const fileName = file.name;
           const numberOnly = fileName.replace(/[^\d-]/g, ""); // Eliminar todo excepto los dígitos
@@ -124,7 +135,7 @@
           planillas.push(parseInt(numberOnly, 10));
           fileList.appendChild(listItem);
         });
-        quantitySelect.textContent = `Cantidad: ${files.length}`
+        quantitySelect.textContent = `Cantidad: ${files.length}`;
         let ordened = planillas.sort((a, b) => a - b);
         let missingNumbers = [];
         for (let i = 0; i < ordened.length - 1; i++) {
@@ -145,7 +156,14 @@
 
           result.appendChild(listItem);
         });
-        quantityMissing.textContent = `Cantidad: ${missingNumbers.length}`
+        quantityMissing.textContent = `Cantidad: ${missingNumbers.length}`;
+        listP.innerHTML = "";
+        Array.from(planillasP).forEach((file) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = file; // Mostrar solo el número
+
+          listP.appendChild(listItem);
+        });
       });
     </script>
   </body>
